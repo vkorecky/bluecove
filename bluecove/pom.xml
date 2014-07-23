@@ -156,15 +156,15 @@
                             <goal>javah</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${native.source.dir}</outputDirectory>
-                            <classNames>
+                            <javahOutputDirectory>${native.source.dir}</javahOutputDirectory>     
+                            <javahClassNames>
                                 <className>com.intel.bluetooth.NativeTestInterfaces</className>
                                 <className>com.intel.bluetooth.BluetoothStackMicrosoft</className>
                                 <className>com.intel.bluetooth.BluetoothStackWIDCOMM</className>
                                 <className>com.intel.bluetooth.BluetoothStackBlueSoleil</className>
                                 <className>com.intel.bluetooth.BluetoothStackToshiba</className>
                                 <className>com.intel.bluetooth.BluetoothStackOSX</className>
-                            </classNames>
+                            </javahClassNames>
                         </configuration>
                     </execution>
                 </executions>
