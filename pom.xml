@@ -309,7 +309,7 @@
         <module>bluecove-gpl</module>
         <module>bluecove-bluez</module>
 		<module>bluecove-android2</module>
-        <module>bluecove-examples</module>
+        <!--module>bluecove-examples</module-->
         <module>distribution</module>
     </modules>
 

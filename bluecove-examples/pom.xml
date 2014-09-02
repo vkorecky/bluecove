@@ -39,7 +39,7 @@
         <module>dependency-fix</module>
         <module>bluecove-tester-base</module>
         <module>tck-agent</module>
-        <module>bluecove-tester</module>
+        <!--module>bluecove-tester</module-->
         <module>bluecove-tester-obex</module>
         <!-- only buildByMicroEmulatorTeam or build server edit settings.xml to enable -->
         <!--module>bluecove-webstart</module-->
