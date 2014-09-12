@@ -8,7 +8,8 @@
 /*/.classpath
 /*/.project
 /*/target
-
+*.iml
+.idea
 /.project
 /.settings
 

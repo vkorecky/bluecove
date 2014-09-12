@@ -7,23 +7,13 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>net.sf.bluecove</groupId>
+    <groupId>org.mule.bluecove</groupId>
     <artifactId>bluecove-parent</artifactId>
     <version>2.1.1-SNAPSHOT</version><!--bluecove-version-->
     <packaging>pom</packaging>
 
-    <url>http://www.bluecove.org</url>
-
     <name>bluecove-parent</name>
 
-    <description>BlueCove is JSR-82 J2SE implementation that currently interfaces with the Linux BlueZ, Mac OS X, WIDCOMM, BlueSoleil and Microsoft Bluetooth stack</description>
-
-
-    <organization>
-        <name>BlueCove Team</name>
-        <url>http://www.bluecove.org</url>
-    </organization>
-    <inceptionYear>2004</inceptionYear>
 
     <licenses>
         <license>
@@ -37,202 +27,31 @@
     </licenses>
 
     <scm>
-        <connection>scm:svn:http://bluecove.googlecode.com/svn/trunk</connection>
-        <developerConnection>scm:svn:https://bluecove.googlecode.com/svn/trunk</developerConnection>
-        <url>http://code.google.com/p/bluecove/source/browse/trunk</url>
+        <connection>scm:git:git://github.com:machaval/bluecove.git</connection>
+        <developerConnection>scm:git:git@github.com:machaval/bluecove.git</developerConnection>
+        <url>http://github.com/machaval/bluecove</url>
+        <tag>HEAD</tag>
     </scm>
 
-    <issueManagement>
-        <system>Google Code Issue Tracking</system>
-        <url>http://code.google.com/p/bluecove/issues/list</url>
-    </issueManagement>
 
-    <mailingLists>
-        <mailingList>
-            <name>bluecove-users</name>
-            <post>bluecove-users@googlegroups.com</post>
-            <archive>http://groups.google.com/group/bluecove-users</archive>
-        </mailingList>
-        <mailingList>
-            <name>bluecove-developers</name>
-            <post>bluecove-developers@googlegroups.com</post>
-            <archive>http://groups.google.com/group/bluecove-developers</archive>
-        </mailingList>
-    </mailingLists>
-
-    <ciManagement>
-        <system>Cruisecontrol</system>
-        <url>http://pyx4j.com/cruisecontrol-public/</url>
-    </ciManagement>
 
     <distributionManagement>
-        <site>
-            <id>bluecove-snapshot-site</id>
-            <url>file:///home/apache/bluecove</url>
-        </site>
-        <!-- No deployment unless we run performRelease build-->
         <repository>
-            <id>no-deployment</id>
-            <url>file:///${basedir}/target/tmp</url>
+            <id>mule-ee-releases</id>
+            <name>MuleEE Releases Repository</name>
+            <url>https://repository-master.mulesoft.org/nexus/content/repositories/ci-releases/</url>
         </repository>
         <snapshotRepository>
-            <id>pyx4j.com-file-development</id>
-            <url>file:///home/apache/pyx4j-repository/maven2-snapshot</url>
+            <id>mule-ee-snapshots</id>
+            <name>MuleEE Snapshots Repository</name>
+            <url>https://repository-master.mulesoft.org/nexus/content/repositories/ci-snapshots/</url>
+            <uniqueVersion>false</uniqueVersion>
         </snapshotRepository>
     </distributionManagement>
 
-    <developers>
-        <developer>
-            <name>Paul Totterman</name>
-            <id>paul.totterman</id>
-            <email>paul.totterman@gmail.com</email>
-            <roles>
-                <role>admin</role>
-                <role>developer</role>
-            </roles>
-            <timezone>+2</timezone>
-        </developer>
-        <developer>
-            <name>Vlad Skarzhevskyy</name>
-            <id>skarzhevskyy</id>
-            <email>skarzhevskyy@gmail.com</email>
-            <organization>pyx4me.com</organization>
-            <organizationUrl>http://www.pyx4me.com</organizationUrl>
-            <roles>
-                <role>developer</role>
-                <role>Build master</role>
-                <role>developer-Winsock</role>
-                <role>developer-WIDCOMM</role>
-                <role>developer-OSX</role>
-                <role>developer-BlueZ</role>
-            </roles>
-            <timezone>-5</timezone>
-        </developer>
-        <developer>
-            <name>Michael Lifshits</name>
-            <id>michael.lifschitz</id>
-            <email>michael.lifschitz@gmail.com</email>
-            <organization>pyx4j.com</organization>
-            <roles>
-                <role>Developer, Architect</role>
-                <role>developer-emu</role>
-            </roles>
-            <timezone>-5</timezone>
-        </developer>
-        <developer>
-            <name>Mina Shokry</name>
-            <id>minashokry</id>
-            <email>minashokry@gmail.com</email>
-            <roles>
-                <role>developer</role>
-                <role>developer-BlueZ-gpl</role>
-				<role>developer-android2</role>
-            </roles>
-            <timezone>+2</timezone>
-        </developer>
-        <developer>
-            <name>Mark Swanson</name>
-            <id>TBD</id>
-            <email>mark@scheduleworld.com</email>
-            <organization>scheduleworld.com</organization>
-            <organizationUrl>http://www.scheduleworld.com</organizationUrl>
-            <roles>
-                <role>developer</role>
-                <role>developer-BlueZ-DBus</role>
-            </roles>
-            <timezone>-5</timezone>
-        </developer>
-        <developer>
-            <name>Trent Gamblin</name>
-            <id>trent@gamblin.ca</id>
-            <email>trent@gamblin.ca</email>
-            <roles>
-                <role>developer</role>
-                <role>developer-Toshiba</role>
-            </roles>
-            <timezone>-5</timezone>
-        </developer>
-    </developers>
-
-    <contributors>
-        <contributor>
-            <name>Eric Wagner</name>
-            <email>gnuloki@gmail.com</email>
-            <roles>
-                <role>developer</role>
-                <role>developer-OSX</role>
-            </roles>
-            <timezone>-5</timezone>
-        </contributor>
-
-        <contributor>
-            <name>Sam Halliday</name>
-            <email>sam.halliday@gmail.com</email>
-            <roles>
-                <role>First OS X binary compilation and tests</role>
-            </roles>
-        </contributor>
 
 
-        <contributor>
-            <name>Mathias Kühn</name>
-            <email>kuehn@synerva.de</email>
-            <organization>SYNERVA GmbH</organization>
-            <organizationUrl>http://www.synerva.de</organizationUrl>
-            <roles>
-                <role>developer</role>
-                <role>developer-OSX</role>
-                <role>developer-OSX-10.8</role>
-            </roles>
-            <timezone>+1</timezone>
-        </contributor>        
-        
-        <!--
-        <contributor>
-            <name></name>
-            <email></email>
-            <organization></organization>
-            <organizationUrl></organizationUrl>
-            <roles>
-                <role></role>
-            </roles>
-        </contributor>
-        -->
-    </contributors>
 
-    <!--4snapshot dependencies -->
-    <!--
-    <repositories>
-        <repository>
-            <id>pyx4j-web-repo</id>
-            <url>http://repository.pyx4j.com/maven2-snapshot</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-        </repository>
-    </repositories>
-    -->
-
-    <!--4snapshot plugin dependencies -->
-    <!--
-    <pluginRepositories>
-
-        <pluginRepository>
-            <id>pyx4j-web-snapshot</id>
-            <url>http://repository.pyx4j.com/maven2-snapshot</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-        </pluginRepository>
-
-    </pluginRepositories>
-    -->
 
     <properties>
         <buildLabel>${project.version}</buildLabel>
@@ -344,24 +163,6 @@
                 </configuration>
             </plugin>
 
-            <!-- jar sources during build -->
-            <!-- Can't be in parent since this breaks the build. e.g. [WARNING] Removing: jar from forked lifecycle
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                        <configuration>
-                            <excludeResources>true</excludeResources>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            -->
 
             <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
@@ -567,25 +368,7 @@
             </properties>
         </profile>
 
-        <profile>
-            <id>release</id>
-            <activation>
-                <property>
-                    <name>performRelease</name>
-                    <value>true</value>
-                </property>
-            </activation>
-            <distributionManagement>
-                <site>
-                    <id>bluecove-release-site</id>
-                    <url>file:///home/apache/bluecove/release-site</url>
-                </site>
-                <repository>
-                    <id>pyx4j.com-file-release</id>
-                    <url>file:///home/apache/pyx4j-repository/maven2-release</url>
-                </repository>
-            </distributionManagement>
-        </profile>
+
 
     </profiles>
 

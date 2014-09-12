@@ -6,7 +6,7 @@
     <!-- @version $Revision$ ($Author$) $Date$ -->
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>net.sf.bluecove</groupId>
+    <groupId>org.mule.bluecove</groupId>
     <artifactId>bluecove-site-skin</artifactId>
     <name>bluecove-site-skin</name>
     <version>2.0.0</version>

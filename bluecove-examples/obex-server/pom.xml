@@ -7,7 +7,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>net.sf.bluecove</groupId>
+        <groupId>org.mule.bluecove</groupId>
         <artifactId>bluecove-examples</artifactId>
         <version>2.1.1-SNAPSHOT</version><!--bluecove-version-->
         <relativePath>../pom.xml</relativePath>
@@ -21,19 +21,19 @@
 
     <dependencies>
         <dependency>
-            <groupId>net.sf.bluecove</groupId>
+            <groupId>org.mule.bluecove</groupId>
             <artifactId>bluecove</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>net.sf.bluecove</groupId>
+            <groupId>org.mule.bluecove</groupId>
             <artifactId>bluecove-gpl</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>net.sf.bluecove</groupId>
+            <groupId>org.mule.bluecove</groupId>
             <artifactId>bluecove-emu</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
