@@ -25,9 +25,6 @@
 #include "common.h"
 #include "commonObjects.h"
 
-#include <dispatch/queue.h>
-#include <dispatch/dispatch.h>
-
 #ifndef CPP_FILE
 #define CPP_FILE "common.cpp"
 #endif
@@ -434,29 +431,31 @@ jint getDeviceClassByOS(JNIEnv *env) {
 #endif
 }
 
+#ifndef WIN32
+void InitializeCriticalSection(CRITICAL_SECTION *criticalRegion) {
+    MPCreateCriticalRegion(criticalRegion);
+}
+void DeleteCriticalSection(CRITICAL_SECTION *criticalRegion) {
+    MPDeleteCriticalRegion(*criticalRegion);
+}
+void EnterCriticalSection(CRITICAL_SECTION *criticalRegion) {
+    MPEnterCriticalRegion(*criticalRegion, kDurationForever);
+}
+void LeaveCriticalSection(CRITICAL_SECTION *criticalRegion) {
+    MPExitCriticalRegion(*criticalRegion);
+}
+#endif
+
 ReceiveBuffer::ReceiveBuffer() {
     safe = RECEIVE_BUFFER_SAFE;
-    if (safe) {
-        ioQueue = dispatch_queue_create(NULL, DISPATCH_QUEUE_SERIAL);
-    }
-    else {
-        ioQueue = dispatch_queue_create(NULL, DISPATCH_QUEUE_CONCURRENT);
-    }
-    
+    if (safe) InitializeCriticalSection(&lock);
     this->size = RECEIVE_BUFFER_MAX;
     reset();
 }
 
 ReceiveBuffer::ReceiveBuffer(int size) {
     safe = RECEIVE_BUFFER_SAFE;
-    
-    if (safe) {
-        ioQueue = dispatch_queue_create(NULL, DISPATCH_QUEUE_SERIAL);
-    }
-    else {
-        ioQueue = dispatch_queue_create(NULL, DISPATCH_QUEUE_CONCURRENT);
-    }
-    
+    if (safe) InitializeCriticalSection(&lock);
     this->size = size;
     if (this->size > RECEIVE_BUFFER_MAX) {
         this->size = RECEIVE_BUFFER_MAX;
@@ -465,9 +464,7 @@ ReceiveBuffer::ReceiveBuffer(int size) {
 }
 
 ReceiveBuffer::~ReceiveBuffer() {
-
-    dispatch_release(ioQueue);
-
+    if (safe) DeleteCriticalSection(&lock);
     magic1b = 0;
     magic2b = 0;
     magic1e = 0;
@@ -547,13 +544,9 @@ int ReceiveBuffer::write(void *p_data, int len) {
     if (overflown) {
         return 0;
     }
-    
-    __block int accept = 0;
-    
-    dispatch_sync(ioQueue, ^{
-        accept = write_buffer(p_data, len);
-    });
-
+    if (safe) EnterCriticalSection(&lock);
+    int accept = write_buffer(p_data, len);
+    if (safe) LeaveCriticalSection(&lock);
     return accept;
 }
 
@@ -561,14 +554,10 @@ int ReceiveBuffer::write_with_len(void *p_data, int len) {
     if (overflown) {
         return 0;
     }
-    
-    __block int accept = 0;
-    
-    dispatch_sync(ioQueue, ^{
-        accept = write_buffer((void*)&len, sizeof(int));
-        accept += write_buffer(p_data, len);
-    });
-
+    if (safe) EnterCriticalSection(&lock);
+    int accept = write_buffer(&len, sizeof(int));
+    accept += write_buffer(p_data, len);
+    if (safe) LeaveCriticalSection(&lock);
     return accept;
 }
 
@@ -586,14 +575,10 @@ int ReceiveBuffer::readByte() {
     if (available() == 0) {
         return -1;
     }
-    
-    __block jint result = 0;
-    
-    dispatch_sync(ioQueue, ^{
-        result = (unsigned char)buffer[read_idx];
-        incReadIdx(1);
-    });
-    
+    if (safe) EnterCriticalSection(&lock);
+    jint result = (unsigned char)buffer[read_idx];
+    incReadIdx(1);
+    if (safe) LeaveCriticalSection(&lock);
     return result;
 }
 
@@ -606,34 +591,32 @@ int ReceiveBuffer::read_len(int* len) {
 }
 
 int ReceiveBuffer::read(void *p_data, int len) {
-    __block int count = available();
+    int count = available();
     if (count == 0) {
         return 0;
     }
-
-    dispatch_sync(ioQueue, ^{
-        if (count > len) {
-            count = len;
+    if (safe) EnterCriticalSection(&lock);
+    if (count > len) {
+        count = len;
+    }
+    if (read_idx + count < size) {
+        if (p_data != NULL) {
+            memcpy(p_data, (buffer + read_idx), count);
         }
-        if (read_idx + count < size) {
-            if (p_data != NULL) {
-                memcpy(p_data, (buffer + read_idx), count);
-            }
-        } else {
-            // Read first part from the end of the buffer.
-            int accept_fill_end_size = size - read_idx;
-            if (p_data != NULL) {
-                memcpy(p_data, (buffer + read_idx), accept_fill_end_size);
-            }
-            // Read second part from the beginning of the buffer.
-            int accept_fill_begin_size = count - accept_fill_end_size;
-            if (p_data != NULL) {
-                memcpy((jbyte*)p_data + accept_fill_end_size, buffer, accept_fill_begin_size);
-            }
+    } else {
+        // Read first part from the end of the buffer.
+        int accept_fill_end_size = size - read_idx;
+        if (p_data != NULL) {
+            memcpy(p_data, (buffer + read_idx), accept_fill_end_size);
         }
-        incReadIdx(count);
-    });
-
+        // Read second part from the beginning of the buffer.
+        int accept_fill_begin_size = count - accept_fill_end_size;
+        if (p_data != NULL) {
+            memcpy((jbyte*)p_data + accept_fill_end_size, buffer, accept_fill_begin_size);
+        }
+    }
+    incReadIdx(count);
+    if (safe) LeaveCriticalSection(&lock);
     return count;
 }
 
@@ -642,21 +625,18 @@ int ReceiveBuffer::skip(int n) {
 }
 
 int ReceiveBuffer::available() {
-
-    __block int rc;
-
-    dispatch_sync(ioQueue, ^{
-        int _rcv_idx = rcv_idx;
-        int _read_idx = read_idx;
-        if ((_read_idx == _rcv_idx) && full) {
-            rc = size;
-        } else if (_read_idx <= _rcv_idx) {
-            rc = (_rcv_idx - _read_idx);
-        } else {
-            rc = (_rcv_idx + (size - _read_idx));
-        }
-    });
-    
+    if (safe) EnterCriticalSection(&lock);
+    int rc;
+    int _rcv_idx = rcv_idx;
+    int _read_idx = read_idx;
+    if ((_read_idx == _rcv_idx) && full) {
+        rc = size;
+    } else if (_read_idx <= _rcv_idx) {
+        rc = (_rcv_idx - _read_idx);
+    } else {
+        rc = (_rcv_idx + (size - _read_idx));
+    }
+    if (safe) LeaveCriticalSection(&lock);
     return rc;
 }
 
@@ -702,9 +682,7 @@ BOOL PoolableObject::isExternalHandle(jlong handle) {
 }
 
 ObjectPool::ObjectPool(int size, int handleOffset, BOOL delayDelete) {
-    
-    lock = dispatch_queue_create(NULL, DISPATCH_QUEUE_SERIAL);
-
+    InitializeCriticalSection(&lock);
     this->size = size;
     this->handleOffset = handleOffset;
     this->delayDelete = delayDelete;
@@ -718,22 +696,19 @@ ObjectPool::ObjectPool(int size, int handleOffset, BOOL delayDelete) {
 }
 
 ObjectPool::~ObjectPool() {
-    
-    dispatch_sync(lock, ^{
-        
-        PoolableObject** __objs = objs;
-        objs = NULL;
-        for(int i = 0; i < size; i ++) {
-            if (__objs[i] != NULL) {
-                PoolableObject* o = __objs[i];
-                __objs[i] = NULL;
-                delete o;
-            }
+    EnterCriticalSection(&lock);
+    PoolableObject** __objs = objs;
+    objs = NULL;
+    for(int i = 0; i < size; i ++) {
+        if (__objs[i] != NULL) {
+            PoolableObject* o = __objs[i];
+            __objs[i] = NULL;
+            delete o;
         }
-        delete __objs;
-    });
-    
-    dispatch_release(lock);
+    }
+    delete __objs;
+    LeaveCriticalSection(&lock);
+    DeleteCriticalSection(&lock);
 }
 
 jlong ObjectPool::realIndex(jlong internalHandle) {
@@ -746,54 +721,52 @@ jlong ObjectPool::realIndex(PoolableObject* obj) {
 
 BOOL ObjectPool::addObject(PoolableObject* obj) {
     //ndebug(("new Object %p", obj));
+    EnterCriticalSection(&lock);
+    if (objs == NULL) {
+        LeaveCriticalSection(&lock);
+        return FALSE;
+    }
+    int freeIndex = -1;
+    for(int k = 0; k < size; k++) {
+        int i = k + handleMove;
+        if (i >= size) {
+            i -= size;
+        }
 
-    __block BOOL result = FALSE;
-    
-    dispatch_sync(lock, ^{
-        if (objs != NULL) {
-            int freeIndex = -1;
-            for(int k = 0; k < size; k++) {
-                int i = k + handleMove;
-                if (i >= size) {
-                    i -= size;
-                }
-                
-                if (delayDelete && (objs[i] != NULL)) {
-                    if (objs[i]->readyToFree) {
-                        delete objs[i];
-                        objs[i] = NULL;
-                    }
-                }
-                
-                if (objs[i] == NULL) {
-                    freeIndex = i;
-                    objs[freeIndex] = obj;
-                    long newHandle = handleOffset + freeIndex + handleBatch * size;
-                    while (newHandle <= handleReturned) {
-                        newHandle += size;
-                        handleBatch ++;
-                    }
-                    // Start all over from start
-                    if (newHandle >= INT_MAX) {
-                        newHandle = handleOffset + freeIndex;
-                        handleBatch = 0;
-                    }
-                    handleReturned = (int)newHandle;
-                    obj->internalHandle = (int)newHandle;
-                    
-                    handleMove ++;
-                    if (handleMove >= size) {
-                        handleMove = 0;
-                    }
-
-                    result = TRUE;
-                    break;
-                }
+        if (delayDelete && (objs[i] != NULL)) {
+            if (objs[i]->readyToFree) {
+                delete objs[i];
+                objs[i] = NULL;
             }
         }
-    });
-    
-    return result;
+
+        if (objs[i] == NULL) {
+            freeIndex = i;
+            objs[freeIndex] = obj;
+            long newHandle = handleOffset + freeIndex + handleBatch * size;
+            while (newHandle <= handleReturned) {
+                newHandle += size;
+                handleBatch ++;
+            }
+            // Start all over from start
+            if (newHandle >= INT_MAX) {
+                newHandle = handleOffset + freeIndex;
+                handleBatch = 0;
+            }
+            handleReturned = (int)newHandle;
+            obj->internalHandle = (int)newHandle;
+
+            handleMove ++;
+            if (handleMove >= size) {
+                handleMove = 0;
+            }
+
+            LeaveCriticalSection(&lock);
+            return TRUE;
+        }
+    }
+    LeaveCriticalSection(&lock);
+    return FALSE;
 }
 
 BOOL ObjectPool::hasObject(PoolableObject* obj) {

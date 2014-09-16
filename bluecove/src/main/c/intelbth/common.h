@@ -24,14 +24,12 @@
 
 #pragma once
 
-#undef USE_WORKER_THREAD
-
 #ifndef BLUECOVE_BUILD
-#define BLUECOVE_BUILD 100
+#define BLUECOVE_BUILD 0
 #endif
 
 #ifndef BLUECOVE_VERSION
-#define BLUECOVE_VERSION 20100
+#define BLUECOVE_VERSION 20101
 #endif
 
 #ifdef _WIN32_WCE
