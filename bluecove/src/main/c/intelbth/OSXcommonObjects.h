@@ -34,7 +34,7 @@
 class ReceiveBuffer {
 private:
 	BOOL safe;
-	CRITICAL_SECTION lock;
+	dispatch_queue_t ioQueue;
 
 	int size;
 
@@ -96,7 +96,7 @@ public:
 
 class ObjectPool {
 private:
-	CRITICAL_SECTION lock;
+	dispatch_queue_t lock;
 
 	int size;
 

@@ -27,8 +27,8 @@
 
 #define EXT_DEBUG
 
-#include "common.h"
-#include "commonObjects.h"
+#include "OSXcommon.h"
+#include "OSXcommonObjects.h"
 
 #define BLUETOOTH_VERSION_USE_CURRENT
 

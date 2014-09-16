@@ -1,17 +1,14 @@
 # Ignore maven built artifacts
-/*/**/.settings
-/*/**/.classpath
-/*/**/.project
-/*/**/target
+.settings
+.classpath
+.project
+target
 
-/*/.settings
-/*/.classpath
-/*/.project
-/*/target
+
 *.iml
 .idea
-/.project
-/.settings
+.project
+.settings
 
 # Ignore user specific files and folders of Xcode 
 /bluecove/src/main/c/intelbth/bluecove.xcodeproj/project.xcworkspace

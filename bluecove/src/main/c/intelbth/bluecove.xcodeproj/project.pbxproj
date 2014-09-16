@@ -11,8 +11,8 @@
 		D40B1CD00D066FC4004F49C4 /* OSXStackL2CAPServer.mm in Sources */ = {isa = PBXBuildFile; fileRef = D40B1CCE0D066FC4004F49C4 /* OSXStackL2CAPServer.mm */; };
 		D41C4FF60CDFEF6C00BF6B4D /* JavaVM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D41C4FF50CDFEF6C00BF6B4D /* JavaVM.framework */; };
 		D41C500A0CDFEF9D00BF6B4D /* commonTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D41C50090CDFEF9D00BF6B4D /* commonTest.cpp */; };
-		D41C500D0CDFEFC000BF6B4D /* common.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D41C500B0CDFEFC000BF6B4D /* common.cpp */; };
-		D41C500E0CDFEFC000BF6B4D /* common.h in Headers */ = {isa = PBXBuildFile; fileRef = D41C500C0CDFEFC000BF6B4D /* common.h */; };
+		D41C500D0CDFEFC000BF6B4D /* OSXcommon.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D41C500B0CDFEFC000BF6B4D /* OSXcommon.cpp */; };
+		D41C500E0CDFEFC000BF6B4D /* OSXcommon.h in Headers */ = {isa = PBXBuildFile; fileRef = D41C500C0CDFEFC000BF6B4D /* OSXcommon.h */; };
 		D41C50100CDFEFCC00BF6B4D /* com_intel_bluetooth_BluetoothStackOSX.h in Headers */ = {isa = PBXBuildFile; fileRef = D41C500F0CDFEFCC00BF6B4D /* com_intel_bluetooth_BluetoothStackOSX.h */; };
 		D41C50650CE0030500BF6B4D /* OSXStack.mm in Sources */ = {isa = PBXBuildFile; fileRef = D41C50630CE0030500BF6B4D /* OSXStack.mm */; };
 		D41C50660CE0030500BF6B4D /* OSXStack.h in Headers */ = {isa = PBXBuildFile; fileRef = D41C50640CE0030500BF6B4D /* OSXStack.h */; };
@@ -57,8 +57,8 @@
 		D40B1CCE0D066FC4004F49C4 /* OSXStackL2CAPServer.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; path = OSXStackL2CAPServer.mm; sourceTree = "<group>"; };
 		D41C4FF50CDFEF6C00BF6B4D /* JavaVM.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaVM.framework; path = /System/Library/Frameworks/JavaVM.framework; sourceTree = "<absolute>"; };
 		D41C50090CDFEF9D00BF6B4D /* commonTest.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = commonTest.cpp; sourceTree = "<group>"; };
-		D41C500B0CDFEFC000BF6B4D /* common.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = common.cpp; sourceTree = "<group>"; };
-		D41C500C0CDFEFC000BF6B4D /* common.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = common.h; sourceTree = "<group>"; };
+		D41C500B0CDFEFC000BF6B4D /* OSXcommon.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = OSXcommon.cpp; sourceTree = "<group>"; };
+		D41C500C0CDFEFC000BF6B4D /* OSXcommon.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = OSXcommon.h; sourceTree = "<group>"; };
 		D41C500F0CDFEFCC00BF6B4D /* com_intel_bluetooth_BluetoothStackOSX.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = com_intel_bluetooth_BluetoothStackOSX.h; sourceTree = "<group>"; };
 		D41C503D0CDFFA9900BF6B4D /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
 		D41C50630CE0030500BF6B4D /* OSXStack.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; path = OSXStack.mm; sourceTree = "<group>"; };
@@ -136,8 +136,8 @@
 				D41C50630CE0030500BF6B4D /* OSXStack.mm */,
 				D41C50640CE0030500BF6B4D /* OSXStack.h */,
 				D41C500F0CDFEFCC00BF6B4D /* com_intel_bluetooth_BluetoothStackOSX.h */,
-				D41C500B0CDFEFC000BF6B4D /* common.cpp */,
-				D41C500C0CDFEFC000BF6B4D /* common.h */,
+				D41C500B0CDFEFC000BF6B4D /* OSXcommon.cpp */,
+				D41C500C0CDFEFC000BF6B4D /* OSXcommon.h */,
 				D41C50090CDFEF9D00BF6B4D /* commonTest.cpp */,
 				D4BAE7640CE2373C0025C976 /* OSXStackDiscovery.h */,
 				D4BAE7650CE2373C0025C976 /* OSXStackDiscovery.mm */,
@@ -160,7 +160,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D41C500E0CDFEFC000BF6B4D /* common.h in Headers */,
+				D41C500E0CDFEFC000BF6B4D /* OSXcommon.h in Headers */,
 				D41C50100CDFEFCC00BF6B4D /* com_intel_bluetooth_BluetoothStackOSX.h in Headers */,
 				D41C50660CE0030500BF6B4D /* OSXStack.h in Headers */,
 				D4BAE7660CE2373C0025C976 /* OSXStackDiscovery.h in Headers */,
@@ -227,7 +227,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D41C500A0CDFEF9D00BF6B4D /* commonTest.cpp in Sources */,
-				D41C500D0CDFEFC000BF6B4D /* common.cpp in Sources */,
+				D41C500D0CDFEFC000BF6B4D /* OSXcommon.cpp in Sources */,
 				D41C50650CE0030500BF6B4D /* OSXStack.mm in Sources */,
 				D4BAE7670CE2373C0025C976 /* OSXStackDiscovery.mm in Sources */,
 				D4A3DE450CEC24F800D976AD /* OSXStackSDPQuery.mm in Sources */,

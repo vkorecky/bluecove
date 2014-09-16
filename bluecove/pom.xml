@@ -29,79 +29,6 @@
         </license>
     </licenses>
 
-    <developers>
-        <developer>
-            <name>Paul Totterman</name>
-            <id>paul.totterman</id>
-            <email>paul.totterman@gmail.com</email>
-            <roles>
-                <role>admin</role>
-                <role>developer</role>
-            </roles>
-            <timezone>+2</timezone>
-        </developer>
-        <developer>
-            <name>Vlad Skarzhevskyy</name>
-            <id>skarzhevskyy</id>
-            <email>skarzhevskyy@gmail.com</email>
-            <organization>pyx4me.com</organization>
-            <organizationUrl>http://www.pyx4me.com</organizationUrl>
-            <roles>
-                <role>developer</role>
-                <role>Build master</role>
-                <role>developer-Winsock</role>
-                <role>developer-WIDCOMM</role>
-                <role>developer-OSX</role>
-            </roles>
-            <timezone>-5</timezone>
-        </developer>
-    </developers>
-
-    <contributors>
-        <contributor>
-            <name>Eric Wagner</name>
-            <email>gnuloki@gmail.com</email>
-            <roles>
-                <role>developer</role>
-                <role>developer-OSX</role>
-            </roles>
-            <timezone>-5</timezone>
-        </contributor>
-
-
-        <contributor>
-            <name>Sam Halliday</name>
-            <email>sam.halliday@gmail.com</email>
-            <roles>
-                <role>First OS X binary compilation and tests</role>
-            </roles>
-        </contributor>
-
-        <contributor>
-            <name>Mathias Kühn</name>
-            <email>kuehn@synerva.de</email>
-            <organization>SYNERVA GmbH</organization>
-            <organizationUrl>http://www.synerva.de</organizationUrl>
-            <roles>
-                <role>developer</role>
-                <role>developer-OSX</role>
-                <role>developer-OSX-10.8</role>
-            </roles>
-            <timezone>+1</timezone>
-        </contributor>
-        
-        <!--
-        <contributor>
-            <name></name>
-            <email></email>
-            <organization></organization>
-            <organizationUrl></organizationUrl>
-            <roles>
-                <role></role>
-            </roles>
-        </contributor>
-        -->
-    </contributors>
 
 
     <dependencies>
@@ -268,7 +195,7 @@
             <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
                 <executions>
-                    <execution>
+                    <!--execution>
                         <id>clean-remove-created-files-main</id>
                         <phase>clean</phase>
                         <goals>
@@ -287,7 +214,7 @@
                                 </delete>
                             </tasks>
                         </configuration>
-                    </execution>
+                    </execution-->
                     <execution>
                         <id>process-classes-fix-manifest</id>
                         <phase>process-classes</phase>
