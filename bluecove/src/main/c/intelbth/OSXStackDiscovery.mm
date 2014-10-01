@@ -596,7 +596,6 @@ JNIEXPORT jstring JNICALL Java_com_intel_bluetooth_BluetoothStackOSX_getRemoteDe
 
 GetRemoteDeviceRSSI::GetRemoteDeviceRSSI() {
     name = "GetRemoteDeviceRSSI";
-    delegate = NULL;
     MPCreateEvent(&inquiryFinishedEvent);
 }
 
@@ -606,25 +605,30 @@ GetRemoteDeviceRSSI::~GetRemoteDeviceRSSI() {
 
 void GetRemoteDeviceRSSI::run() {
     BluetoothDeviceAddress btAddress;
-    LongToOSxBTAddr(bData, &btAddress);
+    LongToOSxBTAddr(lData, &btAddress);
     bluetoothDevice = [IOBluetoothDevice withAddress:&btAddress];
     if (bluetoothDevice == NULL) {
         this->error = 1;
-        this->lData = 0;
+        this->iData = 0;
         return;
     } else {
+        bool disconnect = false;
+        if (![bluetoothDevice isConnected]) {
+            [bluetoothDevice openConnection];
+            disconnect = true;
+        }
         this->error = 0;
-        this->lData = bluetoothDevice.rawRSSI;
+        this->iData = bluetoothDevice.rawRSSI;
+        this->bData = true;
+        if (disconnect) {
+            //Only close connection if we open it
+            [bluetoothDevice closeConnection];
+        }
     }
 }
 
 void GetRemoteDeviceRSSI::release() {
-    if (delegate != NULL) {
-        IOBluetoothHostController *controller = [IOBluetoothHostController defaultController];
-        [controller setDelegate:orig_delegate];
-        [delegate release];
-        delegate = NULL;
-    }
+
 }
 
 RUNNABLE(GetRemoteDeviceRSSIRelease, "GetRemoteDeviceRSSIRelease") {
@@ -638,18 +642,15 @@ JNIEXPORT jint JNICALL Java_com_intel_bluetooth_BluetoothStackOSX_readRemoteDevi
 
 
     GetRemoteDeviceRSSI runnable;
-    runnable.bData = address;
+    runnable.lData = address;
     synchronousBTOperation(&runnable);
-
     if ((stack != NULL) && (runnable.error == 0) && (!runnable.bData)) {
         MPEventFlags flags;
         MPWaitForEvent(runnable.inquiryFinishedEvent, &flags, kDurationMillisecond * 700);
     }
-
     GetRemoteDeviceRSSIRelease release;
     release.pData[0] = &runnable;
     synchronousBTOperation(&release);
-
     if (runnable.error) {
         switch (runnable.error) {
             case 2:

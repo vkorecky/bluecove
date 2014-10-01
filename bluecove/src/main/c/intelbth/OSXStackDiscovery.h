@@ -108,9 +108,6 @@ public:
     MPEventID inquiryFinishedEvent;
     IOBluetoothDevice *bluetoothDevice;
 
-    NSObject *delegate;
-    NSObject *orig_delegate;
-
     GetRemoteDeviceRSSI();
 
     virtual ~GetRemoteDeviceRSSI();
